@@ -2,104 +2,69 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>ChatGPT Mini</title>
+  <title>Chat với AI</title>
   <style>
     body {
-      background: #1e1e2f;
-      color: white;
-      font-family: Arial, sans-serif;
-      padding: 0;
+      font-family: sans-serif;
+      background: #f2f2f2;
       margin: 0;
-    }
-
-    .chat-container {
-      max-width: 800px;
-      margin: 0 auto;
       padding: 30px;
-    }
-
-    .message {
-      padding: 12px 20px;
-      margin: 10px 0;
-      border-radius: 10px;
-      max-width: 70%;
-      line-height: 1.5;
-    }
-
-    .user {
-      background-color: #0077ff;
-      align-self: flex-end;
-      text-align: right;
-      margin-left: auto;
-    }
-
-    .bot {
-      background-color: #2a2a40;
-      align-self: flex-start;
-      text-align: left;
-      margin-right: auto;
-    }
-
-    .chat-box {
       display: flex;
       flex-direction: column;
+      align-items: center;
     }
-
-    .input-box {
-      display: flex;
-      margin-top: 20px;
+    #chat {
+      width: 90%;
+      max-width: 600px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-
-    input[type="text"] {
-      flex: 1;
+    .msg { margin: 10px 0; }
+    .user { color: blue; }
+    .bot { color: green; }
+    input, button {
       padding: 10px;
-      border: none;
-      border-radius: 5px 0 0 5px;
+      margin-top: 10px;
+      width: 100%;
       font-size: 16px;
-    }
-
-    button {
-      padding: 10px 20px;
-      border: none;
-      background: #00cc88;
-      color: white;
-      font-size: 16px;
-      border-radius: 0 5px 5px 0;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #00aa70;
     }
   </style>
 </head>
 <body>
-  <div class="chat-container">
-    <h2>💬 ChatGPT Mini</h2>
-    <div class="chat-box" id="chatBox"></div>
-    <div class="input-box">
-      <input type="text" id="userInput" placeholder="Nhập câu hỏi..." />
-      <button onclick="sendMessage()">Gửi</button>
-    </div>
-  </div>
+  <h2>💬 Chat với AI</h2>
+  <div id="chat"></div>
+  <input id="input" placeholder="Nhập câu hỏi..." />
+  <button onclick="send()">Gửi</button>
 
   <script>
-    function sendMessage() {
-      const input = document.getElementById('userInput');
-      const text = input.value.trim();
-      if (text === '') return;
+    const OPENAI_API_KEY = "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";
 
-      // Hiển thị tin nhắn người dùng
-      const chatBox = document.getElementById('chatBox');
-      chatBox.innerHTML += `<div class="message user">${text}</div>`;
+    async function send() {
+      const input = document.getElementById("input");
+      const chat = document.getElementById("chat");
+      const userMsg = input.value;
+      if (!userMsg) return;
 
-      // Giả lập trả lời từ bot
-      setTimeout(() => {
-        chatBox.innerHTML += `<div class="message bot">🤖 Mình nhận được: "${text}"</div>`;
-        chatBox.scrollTop = chatBox.scrollHeight;
-      }, 500);
+      chat.innerHTML += `<div class="msg user">🧑: ${userMsg}</div>`;
+      input.value = "";
 
-      input.value = '';
+      const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${OPENAI_API_KEY}`
+        },
+        body: JSON.stringify({
+          model: "gpt-3.5-turbo",
+          messages: [{ role: "user", content: userMsg }]
+        })
+      });
+
+      const data = await response.json();
+      const reply = data.choices?.[0]?.message?.content || "Lỗi khi trả lời.";
+      chat.innerHTML += `<div class="msg bot">🤖: ${reply}</div>`;
     }
   </script>
 </body>
