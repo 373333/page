@@ -2,28 +2,105 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Giới thiệu bản thân</title>
+  <title>ChatGPT Mini</title>
   <style>
     body {
+      background: #1e1e2f;
+      color: white;
       font-family: Arial, sans-serif;
-      background: #007BFF; /* Màu xanh dương */
-      color: white;         /* Tất cả chữ màu trắng */
-      padding: 50px;
-      text-align: center;
+      padding: 0;
+      margin: 0;
     }
-    .box {
-      background: rgba(255, 255, 255, 0.1); /* Nền trắng trong suốt nhẹ */
-      padding: 20px;
+
+    .chat-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 30px;
+    }
+
+    .message {
+      padding: 12px 20px;
+      margin: 10px 0;
       border-radius: 10px;
-      display: inline-block;
+      max-width: 70%;
+      line-height: 1.5;
+    }
+
+    .user {
+      background-color: #0077ff;
+      align-self: flex-end;
+      text-align: right;
+      margin-left: auto;
+    }
+
+    .bot {
+      background-color: #2a2a40;
+      align-self: flex-start;
+      text-align: left;
+      margin-right: auto;
+    }
+
+    .chat-box {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .input-box {
+      display: flex;
+      margin-top: 20px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 5px 0 0 5px;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      background: #00cc88;
+      color: white;
+      font-size: 16px;
+      border-radius: 0 5px 5px 0;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #00aa70;
     }
   </style>
 </head>
 <body>
-  <div class="box">
-    <h1>👋 Xin chào!</h1>
-    <p>Mình là <strong>373333</strong>, người đam mê lập trình và công nghệ.</p>
-    <p>Đây là trang demo đầu tiên của mình trên GitHub Pages 🚀</p>
+  <div class="chat-container">
+    <h2>💬 ChatGPT Mini</h2>
+    <div class="chat-box" id="chatBox"></div>
+    <div class="input-box">
+      <input type="text" id="userInput" placeholder="Nhập câu hỏi..." />
+      <button onclick="sendMessage()">Gửi</button>
+    </div>
   </div>
+
+  <script>
+    function sendMessage() {
+      const input = document.getElementById('userInput');
+      const text = input.value.trim();
+      if (text === '') return;
+
+      // Hiển thị tin nhắn người dùng
+      const chatBox = document.getElementById('chatBox');
+      chatBox.innerHTML += `<div class="message user">${text}</div>`;
+
+      // Giả lập trả lời từ bot
+      setTimeout(() => {
+        chatBox.innerHTML += `<div class="message bot">🤖 Mình nhận được: "${text}"</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }, 500);
+
+      input.value = '';
+    }
+  </script>
 </body>
 </html>
